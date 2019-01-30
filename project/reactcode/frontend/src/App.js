@@ -93,19 +93,20 @@ class Vote extends React.Component {
         return response.json();
 
       })
-      .then(data => this.setState({questions: data}))
+      .then(data => this.setState({questions: data},
+          function() {
+            this.makeVotes()}))
 
-  let QuestionsInVoteArray = {}
-  console.log("fuck")
-
-  this.state.questions.map(quest => {
-    console.log("fuck")
-    QuestionsInVoteArray.quest.Question_Id = []
-  })
-
-  this.setState({votes: QuestionsInVoteArray})
   }
 
+makeVotes() {
+  let QuestionsInVoteArray = {};
+    this.state.questions.map(quest => {
+    console.log("Does this run at all?");
+    QuestionsInVoteArray[`question${quest.Question_Id}`] = [];
+});
+  console.log(QuestionsInVoteArray);
+  this.setState({votes: QuestionsInVoteArray});}
 
   getAlternatives(question) {
     if (question.Election_Method === "Range") {
@@ -132,19 +133,16 @@ class Vote extends React.Component {
         {i}
         </label>)
       }
-      console.log(range)
       return range
     }
 
   rangeElection(question) {
     return this.state.alternatives.map(alt => {
-      console.log(question.Question_Id)
       if (alt.Question_Id === question.Question_Id) {
         return(
 
           <div>
           <p>{alt.Alternative_Wording}</p>
-
           {this.getRange(question, alt).map(x => {return x})}
 
           </div>
