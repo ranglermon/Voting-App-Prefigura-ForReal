@@ -52,10 +52,8 @@ class Vote extends React.Component {
       questions: [],
       djangoArgument:"77De399",
       alternatives: [],
-      votes: {
-        Question_1_votes: [{"Vote_Owner": "", "Vote_Value": null, "Election_Id": "","Question_Id": null,"Alternative_Id": null},]
-      }}
-
+      votes: {}};
+      this.makeVoteObjects = this.makeVoteObjects.bind(this)
     }
 
     componentDidMount() {
@@ -64,7 +62,7 @@ class Vote extends React.Component {
   fetch(`http://127.0.0.1:8000/api/elections?search=${this.state.djangoArgument}`)
     .then(response => {
     if (response.status !== 200) {
-      console.log("Madas du suger")
+      console.log("Failed to load Elections for our server")
     }
     return response.json();
 
@@ -76,7 +74,7 @@ class Vote extends React.Component {
     fetch(`http://127.0.0.1:8000/api/alternatives?search=${this.state.djangoArgument}`)
       .then(response => {
         if (response.status !== 200) {
-          console.log("Madas du suger")
+          console.log("Failed to load Alternatives for our server")
         }
         return response.json();
 
@@ -88,25 +86,32 @@ class Vote extends React.Component {
     fetch(`http://127.0.0.1:8000/api/questions?search=${this.state.djangoArgument}`)
       .then(response => {
         if (response.status !== 200) {
-          console.log("Madas du suger")
+          console.log("Failed to load Questions for our server")
         }
         return response.json();
 
       })
       .then(data => this.setState({questions: data},
           function() {
-            this.makeVotes()}))
-
+            this.makeVotes(this.makeVoteObjects)}));
   }
 
-makeVotes() {
+makeVoteObjects () {
+  this.state.alternatives.map(alt => {
+    console.log(alt);
+  });
+};
+
+makeVotes(callback) {
   let QuestionsInVoteArray = {};
     this.state.questions.map(quest => {
     console.log("Does this run at all?");
-    QuestionsInVoteArray[`question${quest.Question_Id}`] = [];
-});
+    QuestionsInVoteArray[`question${quest.Question_Id}votes`] = [];
+  });
   console.log(QuestionsInVoteArray);
-  this.setState({votes: QuestionsInVoteArray});}
+  this.setState({votes: QuestionsInVoteArray});
+  callback();
+  };
 
   getAlternatives(question) {
     if (question.Election_Method === "Range") {
