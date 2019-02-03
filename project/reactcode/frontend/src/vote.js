@@ -9,35 +9,42 @@ class Vote extends React.Component {
       djangoArgument:"77De399",
       alternatives: [],
       votes: {}};
-      this.makeVoteObjects = this.makeVoteObjects.bind(this)
+      this.makeVoteObjects = this.makeVoteObjects.bind(this);
+      this.getApiInformation = this.getApiInformation.bind(this);
+      this.makeVoteArrays = this.makeVoteArrays.bind(this);
+      this.makeVoteObjects = this.makeVoteObjects.bind(this);
+      this.fetchQuestions = this.fetchQuestions.bind(this);
     }
 
-    componentDidMount() {
+    fetchElection() {
+      fetch(`http://127.0.0.1:8000/api/elections?search=${this.state.djangoArgument}`)
+        .then(response => {
+        if (response.status !== 200) {
+          console.log("Failed to load Elections from our server")
+        }
+        return response.json();
 
-//Retrieves election with Election_Id argument from django, updates state
-  fetch(`http://127.0.0.1:8000/api/elections?search=${this.state.djangoArgument}`)
-    .then(response => {
-    if (response.status !== 200) {
-      console.log("Failed to load Elections from our server")
+      })
+        .then(data => {this.setState({election: data})
+        console.log(data)}
+      )
     }
-    return response.json();
 
-  })
-    .then(data => this.setState({election: data}))
-
-    //Retrieves alternatives with Election_Id argument from django, updates state
-
-    fetch(`http://127.0.0.1:8000/api/alternatives?search=${this.state.djangoArgument}`)
+    fetchAlternatives() {
+      return fetch(`http://127.0.0.1:8000/api/alternatives?search=${this.state.djangoArgument}`)
       .then(response => {
         if (response.status !== 200) {
           console.log("Failed to load Alternatives from our server")
         }
         return response.json();
-
       })
-      .then(data => this.setState({alternatives: data}))
+      .then(data => {this.setState({alternatives: data})
+        console.log(data)}
 
-      fetch(`http://127.0.0.1:8000/api/questions?search=${this.state.djangoArgument}`)
+    )};
+
+fetchQuestions() {
+      return fetch(`http://127.0.0.1:8000/api/questions?search=${this.state.djangoArgument}`)
       .then(response => {
         if (response.status !== 200) {
           console.log("Failed to load Questions from our server")
@@ -45,9 +52,24 @@ class Vote extends React.Component {
         return response.json();
 
       })
-      .then(data => this.setState({questions: data},
-          function() {
-            this.makeVoteArrays(this.makeVoteObjects)}));
+      .then(data => {this.setState({questions: data})
+        console.log(data)}
+      );
+
+  };
+
+ getApiInformation() {
+   Promise.all([
+    this.fetchElection(),
+    this.fetchAlternatives(),
+    this.fetchQuestions()
+  ]).then(promise => {
+    console.log(this.state.questions);
+    this.makeVoteArrays(this.makeVoteObjects);
+    console.log("Madas du suger")}, console.log("Yo, you suck"))
+}
+  componentDidMount() {
+  this.getApiInformation();
   }
 
 handleRangeChange(event) {
@@ -55,13 +77,15 @@ handleRangeChange(event) {
 }
 
 makeVoteObjects () {
+  console.log("makeVoteObjects kjører")
   let altToStateArray = {}
   console.log(altToStateArray)
-
+  console.log(this.state.questions);
   this.state.questions.map(question => {
-    let questionToArray = []
-
+    let questionToArray = [];
+    console.log("QuestMappen kjører");
     this.state.alternatives.map(alt => {
+      console.log("AltMappen kjører")
       if (alt.Question_Id === question.Question_Id) {
         const voteObject = {
           Question_Id: question.Question_Id,
@@ -77,13 +101,13 @@ makeVoteObjects () {
   };
 
 makeVoteArrays(callback) {
+  console.log("makeVoteArrays kjører")
   let QuestionsInVoteArray = {};
     this.state.questions.map(quest => {
     QuestionsInVoteArray[`question${quest.Question_Id}votes`] = [];
   });
-  this.setState({votes: QuestionsInVoteArray},
-      function(){
-        callback()
+  this.setState({votes: QuestionsInVoteArray}, function() {
+        callback();
       });
   };
 
@@ -102,11 +126,13 @@ makeVoteArrays(callback) {
   getRange(question, alternative) {
     let range = []
     for (let i = -5; i < 6; i++) {
-      range.push(<label key={alternative.key}>
+      range.push(<label key={alternative.Alternative_Id}>
         <input
         key={alternative.key}
         type="radio"
-        //checked={this.state.votes[`question${question.Question_Id}votes`][alternative.key].value === alternative.key}
+        checked={this.state.votes[`question${question.Question_Id}votes`]
+          [alternative.Alternative_Id].value
+         === i}
         value={i}
         onChange={this.handleRangeChange}
         />
