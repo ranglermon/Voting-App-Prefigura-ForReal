@@ -72,8 +72,11 @@ fetchQuestions() {
   this.getApiInformation();
   }
 
-handleRangeChange(event) {
-  console.log("Penis")
+handleRangeChange(event, Question_Id, Alternative_Id) {
+  let currentState = this.state
+  currentState.votes[`question${Question_Id}votes`]
+    [Alternative_Id].value = event.target.value
+    this.setState({currentState})
 }
 
 makeVoteObjects () {
@@ -133,8 +136,9 @@ makeVoteArrays(callback) {
         checked={this.state.votes[`question${question.Question_Id}votes`]
           [alternative.Alternative_Id].value
          === i}
-        value={i}
-        onChange={this.handleRangeChange}
+         value={i}
+        onChange={event => {this.handleRangeChange(event, question.Question_Id,
+        alternative.Alternative_Id)}}
         />
         {i}
         </label>)
