@@ -38,11 +38,7 @@ class Vote extends React.Component {
         }
         return response.json();
       })
-      .then(data => {this.setState({alternatives: data})
-        console.log(data)}
-
-    )};
-
+      .then(data => {this.setState({alternatives: data})}) };
 fetchQuestions() {
       return fetch(`http://127.0.0.1:8000/api/questions?search=${this.state.djangoArgument}`)
       .then(response => {
@@ -64,9 +60,8 @@ fetchQuestions() {
     this.fetchAlternatives(),
     this.fetchQuestions()
   ]).then(promise => {
-    console.log(this.state.questions);
     this.makeVoteArrays(this.makeVoteObjects);
-    console.log("Madas du suger")}, console.log("Yo, you suck"))
+})
 }
   componentDidMount() {
   this.getApiInformation();
@@ -75,36 +70,29 @@ fetchQuestions() {
 handleRangeChange(event, Question_Id, Alternative_Id) {
   let currentState = this.state
   currentState.votes[`question${Question_Id}votes`]
-    [Alternative_Id].value = event.target.value
+  [Alternative_Id].value = event.target.value
     this.setState({currentState})
 }
 
 makeVoteObjects () {
-  console.log("makeVoteObjects kjører")
   let altToStateArray = {}
-  console.log(altToStateArray)
-  console.log(this.state.questions);
   this.state.questions.map(question => {
     let questionToArray = [];
-    console.log("QuestMappen kjører");
     this.state.alternatives.map(alt => {
-      console.log("AltMappen kjører")
       if (alt.Question_Id === question.Question_Id) {
         const voteObject = {
           Question_Id: question.Question_Id,
           Alternative_Id: alt.Alternative_Id,
-          value:0 };
+          value: 0 };
           questionToArray.push(voteObject);
       }
     })
     altToStateArray[`question${question.Question_Id}votes`] = questionToArray
-    console.log(altToStateArray)
   });
   this.setState({votes: altToStateArray})
   };
 
 makeVoteArrays(callback) {
-  console.log("makeVoteArrays kjører")
   let QuestionsInVoteArray = {};
     this.state.questions.map(quest => {
     QuestionsInVoteArray[`question${quest.Question_Id}votes`] = [];
@@ -128,21 +116,22 @@ makeVoteArrays(callback) {
 
   getRange(question, alternative) {
     let range = []
+    console.log(this.state.votes[`question${question.Question_Id}votes`][alternative.Alternative_Id].value)
     for (let i = -5; i < 6; i++) {
-      range.push(<label key={alternative.Alternative_Id}>
+      console.log(i)
+      range.push(<label key={`alt${alternative.Alternative_Id}options${i}`}>
         <input
-        key={alternative.key}
+        key={`question${question.Question_Id}alt${alternative.Alternative_Id}`}
         type="radio"
-        checked={this.state.votes[`question${question.Question_Id}votes`]
-          [alternative.Alternative_Id].value
-         === i}
-         value={i}
+        value={i}
+        checked={this.state.votes[`question${question.Question_Id}votes`][alternative.Alternative_Id].value === i}
         onChange={event => {this.handleRangeChange(event, question.Question_Id,
-        alternative.Alternative_Id)}}
+                                                          alternative.Alternative_Id)}}
         />
         {i}
         </label>)
       }
+      console.log(range);
       return range
     }
 
@@ -160,8 +149,6 @@ makeVoteArrays(callback) {
         )}
       })
     }
-
-
 
   render() {
     return(
