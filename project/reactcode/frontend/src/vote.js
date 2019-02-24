@@ -12,13 +12,30 @@ class Vote extends React.Component {
       loadingFinished: false
     };
       this.makeVoteObjects = this.makeVoteObjects.bind(this);
+      this.ApiCall = this.ApiCall.bind(this);
       this.getApiInformation = this.getApiInformation.bind(this);
       this.makeVoteArrays = this.makeVoteArrays.bind(this);
       this.makeVoteObjects = this.makeVoteObjects.bind(this);
-      this.fetchQuestions = this.fetchQuestions.bind(this);
+    //  this.fetchQuestions = this.fetchQuestions.bind(this);
     }
+    //Methods related to Api calls
 
-    fetchElection() {
+    ApiCall(arg) {
+      fetch(`http://127.0.0.1:8000/api/${arg}?search=${this.state.djangoArgument}`)
+        .then(response => {
+        if (response.status !== 200) {
+          console.log(`Failed to load ${arg} from our server`);
+        }
+        console.log(`${arg} success`);
+        return response.json();
+      })
+      .then(data => {this.setState({[arg] : data})
+        console.log(data)
+      });
+    };
+
+
+  /*  fetchElection() {
       fetch(`http://127.0.0.1:8000/api/elections?search=${this.state.djangoArgument}`)
         .then(response => {
         if (response.status !== 200) {
@@ -27,8 +44,8 @@ class Vote extends React.Component {
         return response.json();
 
       })
-        .then(data => {this.setState({election: data})
-        //console.log(data)
+      .then(data => {this.setState({"election": data})
+        console.log(data)
       }
       )
     }
@@ -42,7 +59,8 @@ class Vote extends React.Component {
         return response.json();
       })
       .then(data => {this.setState({alternatives: data})}) };
-fetchQuestions() {
+
+    fetchQuestions() {
       return fetch(`http://127.0.0.1:8000/api/questions?search=${this.state.djangoArgument}`)
       .then(response => {
         if (response.status !== 200) {
@@ -52,18 +70,18 @@ fetchQuestions() {
 
       })
       .then(data => {this.setState({questions: data})
-        //console.log(data)
+        console.log(data)
       }
       );
 
   };
-
+*/
  getApiInformation() {
    Promise.all([
-    this.fetchElection(),
-    this.fetchAlternatives(),
-    this.fetchQuestions()
-  ]).then(promise => {
+    this.ApiCall("election"),
+    this.ApiCall("alternatives"),
+    this.ApiCall("questions")])
+    .then(promise => {
     this.makeVoteArrays(this.makeVoteObjects);
 })
 }
@@ -74,7 +92,7 @@ fetchQuestions() {
 handleRangeChange(event, Question_Id, Alternative_Id) {
   let currentState = this.state.votes
   currentState[`question${Question_Id}votes`]
-  [Alternative_Id].value = event.target.value
+  [Alternative_Id].value = parseInt(event.target.value);
     this.setState({votes: currentState})
 }
 
@@ -121,8 +139,7 @@ makeVoteArrays(callback) {
   getRange(question, alternative) {
     let range = [];
     console.log(this.state.votes)
-    return([1, 2, 3, 4])
-    /*if (this.state.votes === undefined) {
+    if (this.state.votes !== undefined) {
     console.log(this.state.votes[`question${question.Question_Id}votes`][question.Question_Id])
     for (let i = -5; i < 6; i++) {
       range.push(<label key={`alt${alternative.Alternative_Id}options${i}`}>
@@ -130,7 +147,7 @@ makeVoteArrays(callback) {
         key={`question${question.Question_Id}alt${alternative.Alternative_Id}`}
         type="radio"
         value={i}
-        checked={this.state.votes[`question${question.Question_Id}votes`] === i}
+        checked={this.state.votes[`question${question.Question_Id}votes`][alternative.Alternative_Id].value === i}
         onChange={event => {this.handleRangeChange(event, question.Question_Id,
                                                           alternative.Alternative_Id)}}
         />
@@ -139,8 +156,8 @@ makeVoteArrays(callback) {
       }
       return range;
     } else{
-      return("Something man")
-    }*/
+      return("The election did not load or something")
+    }
   };
 
   rangeElection(question) {
@@ -157,9 +174,7 @@ makeVoteArrays(callback) {
         )}
       })
     }
-
-  render() {
-    function hasLoaded() {
+     hasLoaded() {
       return(this.state.election.map(elect => {
       return(
         <div>
@@ -180,22 +195,22 @@ makeVoteArrays(callback) {
           </div>)
         }))}
 
-    function hasNotLoaded() {
+     hasNotLoaded() {
         return("The election is being loaded")
         }
 
-    function conditionalRender() {
+     conditionalRender() {
       if (this.state.loadingFinished === true) {
-      return hasLoaded();
+      return this.hasLoaded();
     } else {
-      return hasNotLoaded();
+      return this.hasNotLoaded();
     }
-  };
-
-    return(
-      // Renders Election by looping through state.election
+  }
+  render() {
+  return(
+    // Renders Election by looping through state.election
       <div>
-        {this.conditionalRender()}}
+        {this.conditionalRender()}
         </div>
       )}
 }
