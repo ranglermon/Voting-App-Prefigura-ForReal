@@ -30,7 +30,7 @@ class Vote extends React.Component {
         return response.json();
       })
       .then(data => {this.setState({[arg] : data})
-        console.log(data)
+      console.log(data)
       });
     };
 
@@ -77,13 +77,14 @@ class Vote extends React.Component {
   };
 */
  getApiInformation() {
-   Promise.all([
+    Promise.all([
     this.ApiCall("election"),
     this.ApiCall("alternatives"),
     this.ApiCall("questions")])
     .then(promise => {
     this.makeVoteArrays(this.makeVoteObjects);
-})
+    console.log("Madas the badass is the best")
+}, console.log("something went wrong, and that was very sad"))
 }
   componentDidMount() {
   this.getApiInformation();
@@ -97,11 +98,15 @@ handleRangeChange(event, Question_Id, Alternative_Id) {
 }
 
 makeVoteObjects () {
+  console.log("Does this run?")
   let altToStateArray = {}
+
   this.state.questions.map(question => {
+    console.log("does this run 1")
     let questionToArray = [];
     this.state.alternatives.map(alt => {
       if (alt.Question_Id === question.Question_Id) {
+        console.log("Does this run? 2")
         const voteObject = {
           Question_Id: question.Question_Id,
           Alternative_Id: alt.Alternative_Id,
@@ -111,7 +116,7 @@ makeVoteObjects () {
     })
     altToStateArray[`question${question.Question_Id}votes`] = questionToArray
   });
-  this.setState({votes: altToStateArray, loadingFinished: true}, )
+  this.setState({votes: altToStateArray, loadingFinished: false}, )
   };
 
 makeVoteArrays(callback) {
