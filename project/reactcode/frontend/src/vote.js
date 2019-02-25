@@ -21,17 +21,23 @@ class Vote extends React.Component {
     //Methods related to Api calls
 
     ApiCall(arg) {
-      fetch(`http://127.0.0.1:8000/api/${arg}?search=${this.state.djangoArgument}`)
+      console.log("Does the fetch even happen?")
+      fetch(`http://127.0.0.1:8000/api/${arg}/?search=${this.state.djangoArgument}`)
         .then(response => {
+          console.log("Does the fetch 33333 even happen?")
         if (response.status !== 200) {
           console.log(`Failed to load ${arg} from our server`);
-        }
+        } else {
         console.log(`${arg} success`);
         return response.json();
+      }
       })
       .then(data => {this.setState({[arg] : data})
-      console.log(data)
-      });
+      console.log("faen")
+      console.log()
+    },
+      fail => {return("Fail!")}
+    )
     };
 
 
@@ -80,11 +86,9 @@ class Vote extends React.Component {
     Promise.all([
     this.ApiCall("election"),
     this.ApiCall("alternatives"),
-    this.ApiCall("questions")])
-    .then(promise => {
+    this.ApiCall("questions")]).then(something => {
     this.makeVoteArrays(this.makeVoteObjects);
-    console.log("Madas the badass is the best")
-}, console.log("something went wrong, and that was very sad"))
+    console.log("Dette skal kjøre til slutt for faen")})
 }
   componentDidMount() {
   this.getApiInformation();
@@ -211,11 +215,16 @@ makeVoteArrays(callback) {
       return this.hasNotLoaded();
     }
   }
+
+  testclick() {
+    this.setstate({loadingFinished: false})
+  }
   render() {
   return(
     // Renders Election by looping through state.election
       <div>
         {this.conditionalRender()}
+        <button onClick={() => this.makeVoteArrays(this.makeVoteObjects)}>Morsal er flott</button>
         </div>
       )}
 }
