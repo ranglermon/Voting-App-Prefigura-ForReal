@@ -5,6 +5,10 @@
 <h1>The result of x election is:</h1>
 <p>{{ election.Description }}</p>
 <p>BLABLA</p>
-{ % str(alternative_value_list.Alternative_Wording) % }
+<p>{{ alternative_value_list }}</p>
+{% for something in alternative_value_list %}
+  <p>{{ something }}<p>
+{% endfor %}
+<p>MORRADI</p>
 </body>
 </html>

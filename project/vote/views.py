@@ -85,16 +85,18 @@ def profile(request):
     return HttpResponse("I'm sorry, but you'll have to do javascript work here ;(")
 
 def get_result(request, election_id):
+
     election = Election.objects.get(Election_Id=election_id)
+    questions = Question.objects.filter(Election_Id=election_id)
     votes = Vote.objects.filter(Election_Id=election_id)
     alternatives = Alternative.objects.filter(Election_Id=election_id)
 
-    alternative_value_list = {}
-    test = alternative_value_list
-
-    for x in alternatives:
-        alternative_value_list[x] = 0
-
-
+    alternative_value_list = []
+    for quest in questions:
+        for vote in votes:
+            if vote.Question_Id == quest.Question_Id:
+                alternative_value_list.append(vote.Vote_Value)
+            else:
+                alternative_value_list.append(vote.Vote_Value)
 
     return render(request, 'get_result.html', {'election': election }, {'alternative_value_list': alternative_value_list})

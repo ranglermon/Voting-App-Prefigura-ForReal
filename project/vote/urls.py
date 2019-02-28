@@ -8,6 +8,5 @@ urlpatterns = [
     path('api/votes/', views.VoteListCreate.as_view() ),
     path('accounts/signup', views.signup),
     path('accounts/profile', views.profile),
-    path('getresult/<int:election_id>', views.get_result)
-
+    path('getresult/<str:election_id>', views.get_result),
 ]
