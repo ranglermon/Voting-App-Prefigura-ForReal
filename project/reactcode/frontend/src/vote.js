@@ -112,7 +112,7 @@ handleSubmit(questionId) {
     console.log(vote)
   });
   console.log(votesToSubmit)
-  post("http://127.0.0.1:8000/api/votes/", votesToSubmit);
+//  post("http://127.0.0.1:8000/api/votes/", votesToSubmit);
 
 
 }
