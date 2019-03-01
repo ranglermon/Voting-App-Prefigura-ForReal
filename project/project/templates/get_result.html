@@ -5,10 +5,9 @@
 <h1>The result of x election is:</h1>
 <p>{{ election.Description }}</p>
 <p>BLABLA</p>
-<p>{{ alternative_value_list }}</p>
-{% for something in alternative_value_list %}
-  <p>{{ something }}<p>
-{% endfor %}
+  {% for x in alternative_value_list %}
+  <p>{{ x }}</p>
+  {% endfor %}
 <p>MORRADI</p>
 </body>
 </html>

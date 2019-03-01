@@ -7,6 +7,8 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from rest_framework import generics
 from django.shortcuts import render, redirect, HttpResponse
+from django.template import Context
+
 
 
 class ElectionListCreate(generics.ListCreateAPIView):
@@ -91,12 +93,47 @@ def get_result(request, election_id):
     votes = Vote.objects.filter(Election_Id=election_id)
     alternatives = Alternative.objects.filter(Election_Id=election_id)
 
-    alternative_value_list = []
+    questionAndVotes = {}
+
+    #Dynamically creates the dict/array structure
+    for quest in questions:
+        questionAndVotes[quest.Question_Id] = {}
+        for alt in alternatives:
+            questionAndVotes[quest.Question_Id][alt.Alternative_Id] = []
+    #Adds vote objects
     for quest in questions:
         for vote in votes:
             if vote.Question_Id == quest.Question_Id:
-                alternative_value_list.append(vote.Vote_Value)
-            else:
-                alternative_value_list.append(vote.Vote_Value)
+                questionAndVotes[quest.Question_Id][vote.Alternative_Id].append(vote.Vote_Value)
+    #calculates results
+    results = {}
+    for quest in questionAndVotes:
+        results[quest] = {}
+        if questions[quest].Election_Method == "Range":
+            results[quest]["method"] = "range"
+            for alt in questionAndVotes[quest]:
+                results[quest][alt] = 0
+                altAverage = 0
+                for vote in questionAndVotes[quest][alt]:
+                    altAverage = altAverage + vote
+                results[quest][alt] = (altAverage / len(questionAndVotes[quest][alt]))
+        elif questions[quest].Election_Method == "Majority":
+            results[quest]["method"] = "majority"
+            for alt in questionAndVotes[quest]:
+                results[quest][alt] = 0
+                altAverage = 0
+                for vote in questionAndVotes[quest][alt]:
+                    altAverage = altAverage + vote
+                results[quest][alt] = (altAverage)
+        else:
+            results[quest]["method"] = "approval"
+            for alt in questionAndVotes[quest]:
+                results[quest][alt] = 0
+                altAverage = 0
+                for vote in questionAndVotes[quest][alt]:
+                    altAverage = altAverage + vote
+                results[quest][alt] = (altAverage)
 
-    return render(request, 'get_result.html', {'election': election }, {'alternative_value_list': alternative_value_list})
+    context = {'election': election}
+    return HttpResponse(str(results))
+        #return render(request, 'get_result.html', context)

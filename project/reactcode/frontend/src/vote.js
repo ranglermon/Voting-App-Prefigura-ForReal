@@ -112,7 +112,7 @@ handleSubmit(questionId) {
     console.log(vote)
   });
   console.log(votesToSubmit)
-//  post("http://127.0.0.1:8000/api/votes/", votesToSubmit);
+  //post("http://127.0.0.1:8000/api/votes/", votesToSubmit);
 
 
 }
@@ -129,7 +129,7 @@ makeVoteObjects () {
         console.log("Does this run? 2")
         const voteObject = {
           Question_Id: question.Question_Id,
-          Vote_Owner: "test",
+          Vote_Owner: "Mikhail Bakunin",
           Election_Id: this.state.djangoArgument,
           Alternative_Id: alt.Alternative_Id,
           Vote_Value: 0 };
@@ -293,9 +293,8 @@ makeVoteArrays(callback) {
     this.setstate({loadingFinished: false})
   }
   render() {
-  return(
-    // Renders Election by looping through state.election
-      <div>
+  // Renders Election by looping through state.election
+  return(<div>
         {this.conditionalRender()}
         </div>
       )}
