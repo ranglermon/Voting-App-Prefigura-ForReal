@@ -6,7 +6,7 @@ class ElectionForm extends React.Component {
     super(props)
     this.state = {
       Description: "",
-      Election_ID: "xyZZæø9",
+      Election_ID: "77De399",
       Questions: [{electionMethod: "", questionWording: "", key: 0 , alternatives: [{alternativeWording: "", key: 0 }]}]
     }
   }
