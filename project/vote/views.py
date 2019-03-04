@@ -105,35 +105,46 @@ def get_result(request, election_id):
         for vote in votes:
             if vote.Question_Id == quest.Question_Id:
                 questionAndVotes[quest.Question_Id][vote.Alternative_Id].append(vote.Vote_Value)
+
     #calculates results
+
     results = {}
+
     for quest in questionAndVotes:
         results[quest] = {}
         if questions[quest].Election_Method == "Range":
             results[quest]["method"] = "range"
+            results[quest]["wording"] = questions[quest].Question_Wording
             for alt in questionAndVotes[quest]:
                 results[quest][alt] = 0
-                altAverage = 0
+                voteCount = 0
                 for vote in questionAndVotes[quest][alt]:
-                    altAverage = altAverage + vote
-                results[quest][alt] = (altAverage / len(questionAndVotes[quest][alt]))
+                    voteCount = voteCount + vote
+                results[quest][alt] = {}
+                results[quest][alt]["voteAverage"] = voteCount / len(questionAndVotes[quest][alt])
+                results[quest][alt]["alternativeWording"] = alternatives[alt].Alternative_Wording
         elif questions[quest].Election_Method == "Majority":
             results[quest]["method"] = "majority"
             for alt in questionAndVotes[quest]:
                 results[quest][alt] = 0
-                altAverage = 0
+                voteCount = 0
                 for vote in questionAndVotes[quest][alt]:
-                    altAverage = altAverage + vote
-                results[quest][alt] = (altAverage)
+                    voteCount = voteCount + vote
+                results[quest][alt] = {}
+                results[quest][alt]["voteCount"] = voteCount
+                results[quest][alt]["alternativeWording"] = alternatives[alt].Alternative_Wording
         else:
             results[quest]["method"] = "approval"
             for alt in questionAndVotes[quest]:
                 results[quest][alt] = 0
-                altAverage = 0
+                voteCount = 0
                 for vote in questionAndVotes[quest][alt]:
-                    altAverage = altAverage + vote
-                results[quest][alt] = (altAverage)
+                    voteCount = voteCount + vote
+                results[quest][alt] = {}
+                results[quest][alt]["voteCount"] = voteCount
+                results[quest][alt]["alternativeWording"] = alternatives[alt].Alternative_Wording
 
-    context = {'election': election}
-    return HttpResponse(str(results))
-        #return render(request, 'get_result.html', context)
+
+    context = {'election': election, 'results': results}
+    #return HttpResponse(str(results))
+    return render(request, 'get_result.html', context)

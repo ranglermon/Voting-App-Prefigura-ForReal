@@ -5,8 +5,12 @@
 <h1>The result of x election is:</h1>
 <p>{{ election.Description }}</p>
 <p>BLABLA</p>
-  {% for x in alternative_value_list %}
-  <p>{{ x }}</p>
+  {% for key, value in results.items %}
+    <p>Question number {{ key }}</p>
+      <p> {{ value.wording }}</p>
+    {% for key1, alternative in value.items %}
+      <p> The alternative  "{{ alternative.alternativeWording}}" got an average of {{alternative.voteAverage}} </p>
+    {% endfor %}
   {% endfor %}
 <p>MORRADI</p>
 </body>
