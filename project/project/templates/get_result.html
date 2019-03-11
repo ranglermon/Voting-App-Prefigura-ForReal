@@ -6,10 +6,16 @@
 <p>{{ election.Description }}</p>
 <p>BLABLA</p>
   {% for key, value in results.items %}
-    <p>Question number {{ key }}</p>
+    <p>Question number {{ key|add:"1"  }}</p>
       <p> {{ value.wording }}</p>
+      <p> {{ value }} </p>
+      <p> {{ key.value }} </p>
     {% for key1, alternative in value.items %}
-      <p> The alternative  "{{ alternative.alternativeWording}}" got an average of {{alternative.voteAverage}} </p>
+      {% if key1 != "method" %}
+        {% if key1 != "wording" %}
+        <p> The alternative {{ key1 }} "{{ alternative.alternativeWording}}" got an average of {{alternative.voteAverage}} </p>
+        {% endif %}
+      {% endif %}
     {% endfor %}
   {% endfor %}
 <p>MORRADI</p>

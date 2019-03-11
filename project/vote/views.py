@@ -107,8 +107,8 @@ def get_result(request, election_id):
                 questionAndVotes[quest.Question_Id][vote.Alternative_Id].append(vote.Vote_Value)
 
     #calculates results
-
     results = {}
+    #return HttpResponse(str(questionAndVotes))
 
     for quest in questionAndVotes:
         results[quest] = {}
@@ -122,7 +122,7 @@ def get_result(request, election_id):
                     voteCount = voteCount + vote
                 results[quest][alt] = {}
                 results[quest][alt]["voteAverage"] = voteCount / len(questionAndVotes[quest][alt])
-                results[quest][alt]["alternativeWording"] = alternatives[alt].Alternative_Wording
+                results[quest][alt]["alternativeWording"] = alternatives[quest][alt].Alternative_Wording
         elif questions[quest].Election_Method == "Majority":
             results[quest]["method"] = "majority"
             for alt in questionAndVotes[quest]:
@@ -132,7 +132,7 @@ def get_result(request, election_id):
                     voteCount = voteCount + vote
                 results[quest][alt] = {}
                 results[quest][alt]["voteCount"] = voteCount
-                results[quest][alt]["alternativeWording"] = alternatives[alt].Alternative_Wording
+                results[quest][alt]["alternativeWording"] = alternatives[quest][alt].Alternative_Wording
         else:
             results[quest]["method"] = "approval"
             for alt in questionAndVotes[quest]:
@@ -146,5 +146,5 @@ def get_result(request, election_id):
 
 
     context = {'election': election, 'results': results}
-    #return HttpResponse(str(results))
+    return HttpResponse(str(results))
     return render(request, 'get_result.html', context)
