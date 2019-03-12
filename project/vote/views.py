@@ -93,6 +93,12 @@ def get_result(request, election_id):
     votes = Vote.objects.filter(Election_Id=election_id)
     alternatives = Alternative.objects.filter(Election_Id=election_id)
 
+    didiTWork =[]
+
+    for x in alternatives:
+        didiTWork.append(x.Question_Id)
+
+    #return HttpResponse(didiTWork)
     questionAndVotes = {}
 
     #Dynamically creates the dict/array structure
@@ -109,7 +115,6 @@ def get_result(request, election_id):
     #calculates results
     results = {}
     #return HttpResponse(str(questionAndVotes))
-
     for quest in questionAndVotes:
         results[quest] = {}
         if questions[quest].Election_Method == "Range":
@@ -122,7 +127,8 @@ def get_result(request, election_id):
                     voteCount = voteCount + vote
                 results[quest][alt] = {}
                 results[quest][alt]["voteAverage"] = voteCount / len(questionAndVotes[quest][alt])
-                results[quest][alt]["alternativeWording"] = alternatives[quest][alt].Alternative_Wording
+                results[quest][alt]["alternativeWording"] = alternatives.get(Question_Id=quest, Alternative_Id=alt).Alternative_Wording)
+
         elif questions[quest].Election_Method == "Majority":
             results[quest]["method"] = "majority"
             for alt in questionAndVotes[quest]:
@@ -132,7 +138,7 @@ def get_result(request, election_id):
                     voteCount = voteCount + vote
                 results[quest][alt] = {}
                 results[quest][alt]["voteCount"] = voteCount
-                results[quest][alt]["alternativeWording"] = alternatives[quest][alt].Alternative_Wording
+                results[quest][alt]["alternativeWording"] = alternatives.get(Question_Id=quest, Alternative_Id=alt).Alternative_Wording
         else:
             results[quest]["method"] = "approval"
             for alt in questionAndVotes[quest]:
@@ -142,7 +148,7 @@ def get_result(request, election_id):
                     voteCount = voteCount + vote
                 results[quest][alt] = {}
                 results[quest][alt]["voteCount"] = voteCount
-                results[quest][alt]["alternativeWording"] = alternatives[alt].Alternative_Wording
+                results[quest][alt]["alternativeWording"] = alternatives.get(Question_Id=quest, Alternative_Id=alt).Alternative_Wording
 
 
     context = {'election': election, 'results': results}
