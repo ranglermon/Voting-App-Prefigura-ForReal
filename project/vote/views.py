@@ -100,12 +100,14 @@ def get_result(request, election_id):
 
     #return HttpResponse(didiTWork)
     questionAndVotes = {}
-
     #Dynamically creates the dict/array structure
     for quest in questions:
+        print ("Hey I am" + str(quest))
         questionAndVotes[quest.Question_Id] = {}
         for alt in alternatives:
-            questionAndVotes[quest.Question_Id][alt.Alternative_Id] = []
+            if alt.Question_Id == quest.Question_Id:
+                print ("Hey I am" + "alt" + str(alt))
+                questionAndVotes[quest.Question_Id][alt.Alternative_Id] = []
     #Adds vote objects
     for quest in questions:
         for vote in votes:
@@ -114,7 +116,7 @@ def get_result(request, election_id):
 
     #calculates results
     results = {}
-    #return HttpResponse(str(questionAndVotes))
+    print(str(questionAndVotes))
     for quest in questionAndVotes:
         results[quest] = {}
         if questions[quest].Election_Method == "Range":
@@ -127,7 +129,7 @@ def get_result(request, election_id):
                     voteCount = voteCount + vote
                 results[quest][alt] = {}
                 results[quest][alt]["voteAverage"] = voteCount / len(questionAndVotes[quest][alt])
-                results[quest][alt]["alternativeWording"] = alternatives.get(Question_Id=quest, Alternative_Id=alt).Alternative_Wording)
+                results[quest][alt]["alternativeWording"] = alternatives.get(Question_Id=quest, Alternative_Id=alt).Alternative_Wording
 
         elif questions[quest].Election_Method == "Majority":
             results[quest]["method"] = "majority"
@@ -138,6 +140,7 @@ def get_result(request, election_id):
                     voteCount = voteCount + vote
                 results[quest][alt] = {}
                 results[quest][alt]["voteCount"] = voteCount
+                print(str(quest) + str(alt) + "I am in the majority")
                 results[quest][alt]["alternativeWording"] = alternatives.get(Question_Id=quest, Alternative_Id=alt).Alternative_Wording
         else:
             results[quest]["method"] = "approval"
@@ -152,5 +155,5 @@ def get_result(request, election_id):
 
 
     context = {'election': election, 'results': results}
-    return HttpResponse(str(results))
+    print(str(results))
     return render(request, 'get_result.html', context)
