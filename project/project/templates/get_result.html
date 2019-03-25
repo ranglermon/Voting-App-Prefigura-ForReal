@@ -1,4 +1,4 @@
-
+{% load template_filters %}
 <html>
 <head>
 </head>
@@ -6,21 +6,34 @@
 <h1>The result of x election is:</h1>
 <p>{{ election.Description }}</p>
 <p>BLABLA</p>
-  {% for key, value in results.items %}
     <p>Question number {{ key|add:"1"  }}</p>
-      <p> {{ value.wording }}</p>
+
+{% for key, value in results.items %}
+  <p>Question number {{ key|add:"1"  }}</p>
+    <p> {{ value.wording }}</p>
       <p> {{ key.value }} </p>
+
+  {% with 0 as i %}
     {% for key1, alternative in value.items %}
-      {{ key1|lookup:item.name }}
-        {% if key1 != "method" %}
-          {% if key1 != "wording" %}
+
+      {% for key2, value in alternative.items %}
+          {% if value|is_not_string %}
+            {% if value|is_not_string %}
+              <p> Alternative {{ key1|plus:1 }} got a value of {{ value }}
+                <br>
+            {% endif %}
+          {% endif %}
+      {% endfor %}
+
+
             {% if key1.method == "range" %}
               <p> The alternative {{ key1 }} "{{ alternative.alternativeWording}}" got an average of {{alternative.voteAverage}} </p>
-            {% endif %}
-        {% endif %}
+
       {% endif %}
     {% endfor %}
-  {% endfor %}
+  {% endwith %}
+{% endfor %}
+
 <p>MORRADI</p>
 </body>
 </html>
