@@ -129,7 +129,7 @@ makeVoteObjects () {
         console.log("Does this run? 2")
         const voteObject = {
           Question_Id: question.Question_Id,
-          Vote_Owner: "Are Eimstad",
+          Vote_Owner: "Jeg tester enda mer ass bror",
           Election_Id: this.state.djangoArgument,
           Alternative_Id: alt.Alternative_Id,
           Vote_Value: 0 };

@@ -16,12 +16,13 @@
     {% for key1, alternative in value.items %}
 
       {% for key2, value in alternative.items %}
-          {% if value|is_not_string %}
-            {% if value|is_not_string %}
-              <p> Alternative {{ key1|plus:1 }} got a value of {{ value }}
-                <br>
-            {% endif %}
+      {% if value|is_string %}
+        <p> Alternative {{ key1|plus:1 }} ({{ value }})
           {% endif %}
+            {% if value|is_not_string %}
+                got a value of {{ value }} </p>
+            {% endif %}
+
       {% endfor %}
 
 

@@ -128,8 +128,8 @@ def get_result(request, election_id):
                 for vote in questionAndVotes[quest][alt]:
                     voteCount = voteCount + vote
                 results[quest][alt] = {}
-                results[quest][alt]["voteAverage"] = voteCount / len(questionAndVotes[quest][alt])
                 results[quest][alt]["alternativeWording"] = alternatives.get(Question_Id=quest, Alternative_Id=alt).Alternative_Wording
+                results[quest][alt]["voteAverage"] = voteCount / len(questionAndVotes[quest][alt])
 
         elif questions[quest].Election_Method == "Majority":
             results[quest]["method"] = "majority"
@@ -139,9 +139,9 @@ def get_result(request, election_id):
                 for vote in questionAndVotes[quest][alt]:
                     voteCount = voteCount + vote
                 results[quest][alt] = {}
-                results[quest][alt]["voteCount"] = voteCount
                 print(str(quest) + str(alt) + "I am in the majority")
                 results[quest][alt]["alternativeWording"] = alternatives.get(Question_Id=quest, Alternative_Id=alt).Alternative_Wording
+                results[quest][alt]["voteCount"] = voteCount
         else:
             results[quest]["method"] = "approval"
             for alt in questionAndVotes[quest]:
@@ -150,8 +150,8 @@ def get_result(request, election_id):
                 for vote in questionAndVotes[quest][alt]:
                     voteCount = voteCount + vote
                 results[quest][alt] = {}
-                results[quest][alt]["voteCount"] = voteCount
                 results[quest][alt]["alternativeWording"] = alternatives.get(Question_Id=quest, Alternative_Id=alt).Alternative_Wording
+                results[quest][alt]["voteCount"] = voteCount
 
 
     context = {'election': election, 'results': results}
