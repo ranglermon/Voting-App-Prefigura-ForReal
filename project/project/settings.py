@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'vote',
     'frontend',
     'rest_framework',
+    'knox',
+    'rest_framework.authtoken',
 
 ]
 
@@ -56,7 +58,9 @@ MIDDLEWARE = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+
 }
 
 ROOT_URLCONF = 'project.urls'

@@ -24,7 +24,8 @@ class Alternative(models.Model):
     Alternative_Id = models.IntegerField(default =0 )
 
 class Vote(models.Model):
-    Vote_Owner = models.CharField(default = " " , max_length = 200)
+    Vote_Owner = models.ForeignKey(User, related_name="votes",
+                                    on_delete=models.CASCADE, null=True)
     Vote_Value = models.IntegerField(default = " " )
     Election_Id = models.CharField(default = " " , max_length = 200)
     Question_Id = models.IntegerField(default = 0)

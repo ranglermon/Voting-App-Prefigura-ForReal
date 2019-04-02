@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 urlpatterns = [
@@ -9,4 +9,7 @@ urlpatterns = [
     path('accounts/signup', views.signup),
     path('accounts/profile', views.profile),
     path('getresult/<str:election_id>', views.get_result),
-]
+    path('api/auth/', include('knox.urls')),
+    path('api/auth/register', views.RegistrationAPI.as_view()),
+    path('api/auth/login', views.LoginAPI.as_view()),
+    ]

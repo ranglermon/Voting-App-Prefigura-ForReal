@@ -5,7 +5,9 @@ from vote.models import Election
 from vote.serializers import *
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
+from knox.models import AuthToken
 from rest_framework import generics
+from rest_framework.response import Response
 from django.shortcuts import render, redirect, HttpResponse
 from django.template import Context
 
@@ -68,6 +70,30 @@ class VoteListCreate(generics.ListCreateAPIView):
             if isinstance(data, list):
                 kwargs["many"] = True
         return super(VoteListCreate, self).get_serializer(*args, **kwargs)
+
+class RegistrationAPI(generics.GenericAPIView):
+    serializer_class = CreateUserSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        return Response({
+        'user': UserSerializer(user, context=self.get_serializer_context()).data,
+        'token': AuthToken.objects.create(user)
+        })
+
+class LoginAPI(generics.GenericAPIView):
+    serializer_class = LoginUserSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data
+        return Response({
+           'user': UserSerializer(user, context=self.get_serializer_context()).data,
+           'token': AuthToken.objects.create(user)
+         })
 
 def signup(request):
     if request.method == 'POST':

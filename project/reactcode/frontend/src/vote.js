@@ -1,7 +1,5 @@
 import React from "react"
 
-// Hvis ikke votes er oppretta, call den funksjonen som lager den, dette blir i praksis en infinte loop, helt til problemet er løst :D
-
 class Vote extends React.Component {
   constructor(props) {
     super(props);
@@ -129,7 +127,7 @@ makeVoteObjects () {
         console.log("Does this run? 2")
         const voteObject = {
           Question_Id: question.Question_Id,
-          Vote_Owner: "Jeg tester enda mer ass bror",
+          Vote_Owner: "valter",
           Election_Id: this.state.djangoArgument,
           Alternative_Id: alt.Alternative_Id,
           Vote_Value: 0 };
