@@ -2,10 +2,11 @@ from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from vote.models import Election
+from django.contrib.auth.models import User
 from vote.serializers import *
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
-from knox.models import AuthToken
+from rest_framework.authtoken.models import Token
 from rest_framework import generics
 from rest_framework.response import Response
 from django.shortcuts import render, redirect, HttpResponse
@@ -80,7 +81,7 @@ class RegistrationAPI(generics.GenericAPIView):
         user = serializer.save()
         return Response({
         'user': UserSerializer(user, context=self.get_serializer_context()).data,
-        'token': AuthToken.objects.create(user)
+        'token': Token.objects.create(user=user)
         })
 
 class LoginAPI(generics.GenericAPIView):
@@ -91,9 +92,9 @@ class LoginAPI(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
         return Response({
-           'user': UserSerializer(user, context=self.get_serializer_context()).data,
-           'token': AuthToken.objects.create(user)
-         })
+            "user": UserSerializer(user, context=self.get_serializer_context()).data,
+            "token": Token.objects.create(user=user).key
+        })
 
 def signup(request):
     if request.method == 'POST':

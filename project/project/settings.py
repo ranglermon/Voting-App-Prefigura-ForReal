@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
 ]
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -59,8 +60,10 @@ MIDDLEWARE = [
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
-    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
-
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
 }
 
 ROOT_URLCONF = 'project.urls'
