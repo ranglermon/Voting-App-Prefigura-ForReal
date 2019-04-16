@@ -39,9 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'vote',
+    'knox',
     'frontend',
     'rest_framework',
-    'knox',
     'rest_framework.authtoken',
 
 ]

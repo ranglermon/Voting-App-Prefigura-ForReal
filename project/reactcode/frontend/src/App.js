@@ -2,6 +2,7 @@ import React from "react"
 import './App.css';
 import Vote from "./vote.js"
 import CreateElection from "./CreateElection.js"
+import Login from "./Login.js"
 
 class App extends React.Component {
   constructor(props) {
@@ -10,7 +11,7 @@ class App extends React.Component {
     }
 
   componentDidMount() {
-    this.setState({render: "Vote"})
+    this.setState({render: "Default"})
   }
 
   load1() {
@@ -21,11 +22,16 @@ class App extends React.Component {
       this.setState({render: "Form"})
     }
 
+  load3() {
+        this.setState({render: "login"})
+      }
+
 
   render() {
       {if (this.state.render === "Default") {
         return (
         <div>
+          <button onClick={() => {this.load3()}}>render Login Form</button>
           <button onClick={() => {this.load2()}}>render Make Election</button>
           <button onClick={() => {this.load1()}}>Render Vote</button>
         </div>
@@ -36,6 +42,9 @@ class App extends React.Component {
     }
     else if (this.state.render === "Form") {
       return <CreateElection />
+      }
+    else if (this.state.render === "login") {
+      return <Login />
       }
     }
   }
