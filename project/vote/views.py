@@ -10,7 +10,10 @@ from rest_framework.authtoken.models import Token
 from rest_framework import generics
 from rest_framework.response import Response
 from django.shortcuts import render, redirect, HttpResponse
+from django.http import JsonResponse
+from django.middleware.csrf import get_token
 from django.template import Context
+
 
 
 

@@ -27,6 +27,8 @@ DEBUG = True
 CORS_ORIGIN_ALLOW_ALL = True
 
 ALLOWED_HOSTS = ['*']
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = ['localhost:3000']
 
 
 # Application definition
@@ -39,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'vote',
-    'knox',
+    'corsheaders',
     'frontend',
     'rest_framework',
     'rest_framework.authtoken',
@@ -63,6 +65,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+
     )
 }
 
@@ -84,8 +88,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'project.wsgi.application'
 
+WSGI_APPLICATION = 'project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases

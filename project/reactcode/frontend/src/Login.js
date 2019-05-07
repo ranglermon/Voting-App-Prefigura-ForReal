@@ -6,9 +6,34 @@ class Login extends React.Component {
     this.state = {
       username: "",
       password: "",
-      csrftoken: ""
     };
   };
+     handleSubmit = async (event) => {
+
+      console.log("The post runs")
+      console.log("This runs first does it not")
+
+       const postObject =  (postData, csrf) => { fetch("http://127.0.0.1:8000/api/token/", {
+  			method: "POST",
+  			mode: "cors",
+  			cache: "no-cache",
+  			credentials: "same-origin",
+  			headers: {
+  				"Content-Type": "application/json; charset=utf-8",
+  			},
+  			redirect: "follow",
+  			referrer: "no-referrer",
+  			body: JSON.stringify(postData),
+  	 	})
+  		}
+      const credentials = {
+        "username": `${this.state.username}`,
+        "password": `${this.state.password}`,
+      }
+      postObject(credentials)
+      console.log(credentials)
+    }
+
     handlePasswordChange = (event) => {
       this.setState({password: event.target.value});
     }
@@ -16,26 +41,8 @@ class Login extends React.Component {
     handleUsernameChange = (event) => {
       this.setState({username: event.target.value});
     };
-
-     getCookie = (name) => {
-        var cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
+    componentDidMount() {
     }
-    easy() {
-    var csrftoken = this.getCookie('csrftoken');
-    this.setState({csrftoken: csrftoken})
-  };
 
 
   render() {
@@ -56,7 +63,7 @@ class Login extends React.Component {
           TELL ME YOUR FCKN PASSWRD
           <input type="password" onChange={this.handlePasswordChange} />
           </label>
-
+          <button onClick={() => this.handleSubmit()} type="button">Login</button>
         </form>
       </div>);
   };

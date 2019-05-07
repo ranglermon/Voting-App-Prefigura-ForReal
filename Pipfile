@@ -19,6 +19,7 @@ pytz = "==2018.9"
 urllib3 = "==1.24.1"
 Django = "==2.1.5"
 django-rest-knox = "*"
+djangorestframework-simplejwt = "*"
 
 [requires]
 python_version = "3.7"
